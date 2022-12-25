@@ -2,23 +2,19 @@ import re
 
 import pytest
 
-from scrapli_community.dlink.os.dlink_os import DEFAULT_PRIVILEGE_LEVELS
+from scrapli_community.dlink.os.dlink_os import SCRAPLI_PLATFORM
 
 
 @pytest.mark.parametrize(
-    "priv_pattern",
+    "prompt",
     [
-        ("exec", "Switch:admin#"),
-        ("privilege_exec", "Switch:admin#"),
-    ],
-    ids=[
-        "ssh_prompt_exec",
-        "ssh_prompt_privilege_exec",
+        "hostname:admin#",
+        "DES-3200-28/ME:admin#",
+        "DGS-3120-24TC:admin#",
     ],
 )
-def test_default_prompt_patterns(priv_pattern):
-    priv_level_name = priv_pattern[0]
-    prompt = priv_pattern[1]
-    prompt_pattern = DEFAULT_PRIVILEGE_LEVELS.get(priv_level_name).pattern
+def test_default_prompt_patterns(prompt):
+    prompt_pattern = SCRAPLI_PLATFORM["defaults"]["comms_prompt_pattern"]
     match = re.search(pattern=prompt_pattern, string=prompt, flags=re.M | re.I)
+
     assert match
